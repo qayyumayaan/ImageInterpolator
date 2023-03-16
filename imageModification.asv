@@ -4,7 +4,7 @@
 
 function img1 = imageModification(img0, img2)
 
-    img1 = motionCompensatedAttempt1(img0, img2);
+    img1 = motionCompensatedAttempt2(img0, img2);
 
 end
 
@@ -52,11 +52,9 @@ function newFrame = motionCompensatedAttempt1(img1, img2)
     % Warp the first frame to generate intermediate frame
     tform = affinetform2d([1 0 0; 0 1 0; flow.Vx(1,1) flow.Vy(1,1) 1]);
     intermediate = imwarp(img1, tform);
-    newFrame = intermediate;
     
     % Blend intermediate frame with second frame
-
-%     newFrame = imfuse(intermediate, img2, 'blend');
+    newFrame = imfuse(intermediate, img2, 'blend');
     
 %     imshow(newFrame);
 %     disp("Finished.");

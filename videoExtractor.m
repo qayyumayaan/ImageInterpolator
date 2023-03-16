@@ -18,7 +18,7 @@ function [videoFile, videoPath, output_folder, numFrames, originalFrameRate, IsV
     % Create a VideoReader object for the input video file
     video = VideoReader(fullfile(videoPath,videoFile));
     originalFrameRate = video.FrameRate;
-    if originalFrameRate >= 59.9
+    if originalFrameRate >= 30
         IsVideoFPSInput60 = true;
     end
     
