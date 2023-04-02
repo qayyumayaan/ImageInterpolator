@@ -4,7 +4,7 @@
 
 function img1 = imageModification(img0, img2)
 
-    img1 = motionCompensatedAttempt1(img0, img2);
+    img1 = motionCompensatedAttempt3(img0, img2);
 
 end
 
@@ -48,9 +48,9 @@ function newFrame = motionCompensatedAttempt1(img1, img2)
     
     % Estimate motion between the two frames
     flow = opticalFlow(gray1, gray2);
-    
-    % Warp the first frame to generate intermediate frame
+
     tform = affinetform2d([1 0 0; 0 1 0; flow.Vx(1,1) flow.Vy(1,1) 1]);
+
     intermediate = imwarp(img1, tform);
     newFrame = intermediate;
     
@@ -64,15 +64,50 @@ function newFrame = motionCompensatedAttempt1(img1, img2)
 end
 
 
+function newFrame = judderExample(img1, img2) 
+    % judder happens when a display repeats a frame, leading to the time
+    % each frame is displayed being nonuniform. not desirable. 
+    newFrame = img1;
+end
 
-function newFrame = motionCompensatedAttempt2(img1, img2) 
 
-    gray1 = im2double(rgb2gray(img1));
+function newFrame = motionCompensatedAttempt2(img0, img2) 
+
+    gray1 = im2double(rgb2gray(img0));
     gray2 = im2double(rgb2gray(img2));
     
     % Estimate motion between the two frames
     flow = opticalFlow(gray1, gray2);
-    newFrame = imwarp(img1, flow);
+    plot(flow,DecimationFactor=[10 10],ScaleFactor=10);
+
+%     tform = [flow.Vx, flow.Vy];
+
+    [X, Y] = size(flow.Vx); Z = 2; tform = zeros(X,Y,Z);
+    tform(:,:,1) = flow.Vy;
+    tform(:,:,2) = flow.Vx;
+
+    intermediate = imwarp(img0, tform, "cubic");
+    newFrame = intermediate;
+    
+    % Blend intermediate frame with second frame
+
+%     newFrame = imfuse(intermediate, img2, 'blend');
+    
+%     imshow(newFrame);
+%     disp("Finished.");
+
+end
+
+
+function newFrame = motionCompensatedAttempt3(img0, img2) 
+
+% blkMatcher = vision.BlockMatcher;
+
+    blkMatcher = vision.BlockMatcher('BlockSize', [16 16], 'SearchMethod', 'Exhaustive');
+    
+    motionVectors = step(blkMatcher, img0, img2);
+    
+    plot(motionVectors);
 
 
 end

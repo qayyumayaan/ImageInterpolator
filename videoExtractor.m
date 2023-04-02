@@ -39,6 +39,6 @@ function [videoFile, videoPath, output_folder, numFrames, originalFrameRate, IsV
         numFrames = numFrames + 1;
     end
     
-    disp('Video Extraction Finished!')
+    disp('Video Extraction Finished!');
 
 end

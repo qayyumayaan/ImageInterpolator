@@ -22,6 +22,7 @@ while (num < numFrames)
         break; 
     end
     img2 = imread(fullfile(output_folder, sprintf('%4d.png',num+2)));
+    
     img1 = imageModification(img0, img2);
     
     imwrite(img1, fullfile(output_folder, sprintf('%4d.png',num+1)));   
@@ -29,6 +30,6 @@ while (num < numFrames)
     img0 = img2;
 end
 
-disp("Video Interpolation Finished!");
+disp("Video Interpolation Finished! Converting into final video...");
 imagesToVideo(finalPath, frameRate, finalName, output_folder);
 rmdir(output_folder,'s');
